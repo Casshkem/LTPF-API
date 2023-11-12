@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+#chat-container {
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#chat-output {
+    padding: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#user-input {
+    display: flex;
+    padding: 16px;
+    border-top: 1px solid #eee;
+}
+
+#message-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px;
+    margin-left: 8px;
+    border: none;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT API Showcase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-output"></div>
+        <div id="user-input">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+    const chatOutput = document.getElementById('chat-output');
+const messageInput = document.getElementById('message-input');
+
+function sendMessage() {
+    const userMessage = messageInput.value;
+    if (!userMessage) return;
+
+    displayMessage(userMessage, 'user');
+
+    // Replace 'YOUR_API_KEY' with your actual ChatGPT API key
+    const apiKey = 'YOUR_API_KEY';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [{ role: 'system', content: 'You are a helpful assistant.' }, { role: 'user', content: userMessage }],
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const chatResponse = data.choices[0].message.content;
+        displayMessage(chatResponse, 'assistant');
+    })
+    .catch(error => console.error('Error:', error));
+
+    messageInput.value = '';
+}
+
+function displayMessage(message, role) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = role;
+    messageDiv.textContent = message;
+    chatOutput.appendChild(messageDiv);
+}
+    </script>
+</body>
+</html>
