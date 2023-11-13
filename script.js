@@ -8,7 +8,7 @@ function sendMessage() {
     displayMessage(userMessage, 'user');
 
     // Replace 'YOUR_API_KEY' with your actual ChatGPT API key
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     fetch(apiUrl, {
